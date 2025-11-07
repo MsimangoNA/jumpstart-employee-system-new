@@ -4,11 +4,17 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return render_template('login.html', 
-                         config={
-                             'SUPABASE_URL': current_app.config['SUPABASE_URL'],
-                             'SUPABASE_KEY': current_app.config['SUPABASE_KEY']
-                         })
+    # Safely get values (avoids KeyError if not found)
+    supabase_url = current_app.config.get('SUPABASE_URL')
+    supabase_key = current_app.config.get('SUPABASE_KEY')
+
+    return render_template(
+        'login.html',
+        config={
+            'SUPABASE_URL': supabase_url,
+            'SUPABASE_KEY': supabase_key
+        }
+    )
 
 @main.route('/dashboard')
 def dashboard():

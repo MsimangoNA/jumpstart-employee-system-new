@@ -82,15 +82,20 @@ def get_current_user():
 @auth_bp.route('/register', methods=['POST'])
 def register():
     try:
-        data = request.get_json()
+        print("Headers:", request.headers)
+        print("JSON:", request.get_json())
+        print("Form:", request.form)
+
+        data = request.get_json() or request.form  # <-- add this line
         email = data.get('email')
         password = data.get('password')
         full_name = data.get('full_name')
         employee_id = data.get('employee_id')
         department = data.get('department', '')
-        
+
         if not email or not password:
             return jsonify({'message': 'Email and password are required!'}), 400
+
         
         # Create user in Supabase Auth
         supabase = get_supabase()
@@ -102,7 +107,7 @@ def register():
         if auth_response.user is None:
             return jsonify({'message': 'Error creating user in authentication'}), 400
         
-        user = auth_response.user
+        user = auth_response.userP
         
         # Create user profile in profiles table
         profile_data = {
